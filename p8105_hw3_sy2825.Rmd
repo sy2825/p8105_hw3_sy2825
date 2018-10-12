@@ -9,3 +9,26 @@ date: "2018-10-12"
 ```{r setup, include = FALSE}
 library(tidyverse)
 ```
+
+# Problem 1
+
+First, let's import and clean the BRFSS data.
+
+```{r BRFSS}
+library(p8105.datasets)
+
+data(brfss_smart2010)
+
+brfss_clean = janitor::clean_names(brfss_smart2010) %>%
+  rename(state = locationabbr, state_and_county = locationdesc, lower_confidence_limit = confidence_limit_low, 
+         higher_confidence_limit = confidence_limit_high) %>%
+  filter(topic == "Overall Health") %>%
+  select(response) %>%
+  mutate(
+    response = factor(response, c("Excellent", "Very good", "Good", "Fair", "Poor"))
+  )
+  
+ 
+brfss_clean
+
+```
