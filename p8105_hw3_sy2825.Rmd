@@ -23,7 +23,6 @@ brfss_clean = janitor::clean_names(brfss_smart2010) %>%
   rename(state = locationabbr, state_and_county = locationdesc, lower_confidence_limit = confidence_limit_low, 
          higher_confidence_limit = confidence_limit_high) %>%
   filter(topic == "Overall Health") %>%
-  select(year, state, state_and_county, response) %>%
   mutate(
     response = factor(response, c("Excellent", "Very good", "Good", "Fair", "Poor"))
   )
@@ -73,10 +72,7 @@ From the spaghetti plot above we can see that state FL has big differences of th
 *Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.
 
 ```{r mean_and_sd_of_proportion_of_excellent}
-brfss_smart2010 %>%
-  janitor::clean_names() %>%
-  rename(state = locationabbr, state_and_county = locationdesc, lower_confidence_limit = confidence_limit_low, 
-         higher_confidence_limit = confidence_limit_high) %>%
+brfss_clean %>%
   filter(year == "2002" | year == "2006" | year == "2010", state == "NY", response == "Excellent") %>%
   group_by(Year = year) %>%
   summarize(Mean = mean(data_value)/100, Standard_deviation = sd(data_value)/100) %>%
@@ -85,3 +81,31 @@ brfss_smart2010 %>%
 ```
 
 From the table we can see that the mean and standard deviation of the proportion of "Excellent" responses across locations in NY state have few differences between year 2002, 2006, and 2010.
+
+*For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.
+
+```{r five_panel_plot}
+brfss_average_proportion = brfss_clean %>%
+  group_by(Year = year, State = state, Response = response) %>%
+  summarize(Proportion = mean(data_value)/100)
+
+brfss_average_proportion
+
+brfss_average_proportion %>%
+ggplot(aes(x = Year, y = Proportion, color = State)) +
+  geom_line() +
+  labs(
+    title = "Distribution of average proportion over time",
+    x = "Year",
+    y = "Proportion",
+    caption = "Data from BRFSS data in p8105.datasets package"
+  ) +
+  viridis::scale_color_viridis(
+    name = "States", 
+    discrete = TRUE
+  ) +
+  facet_grid(. ~ Response) +
+  theme(legend.position = "bottom")
+
+```
+
