@@ -109,3 +109,39 @@ ggplot(aes(x = Year, y = Proportion, color = State)) +
 
 ```
 
+From the plots wo can see that "very good" response has highest proportion.
+
+# Problem 2
+
+First, let's import and clean the instacart data.
+
+```{r instacart}
+
+data(instacart)
+
+instacart_clean = janitor::clean_names(instacart)
+
+```
+Then let's explore this dataset.
+
+
+```{r instacart_explore}
+
+instacart_clean
+
+information_explore = matrix(c(
+  nrow(distinct(instacart_clean, product_name)), nrow(distinct(instacart_clean, product_id)),
+  
+  nrow(distinct(instacart_clean, aisle)), nrow(distinct(instacart_clean, aisle_id)),
+  
+  nrow(distinct(instacart_clean, department)), nrow(distinct(instacart_clean, department_id))), ncol = 3
+)
+
+colnames(information_explore) = c("Product", "Aisle", "Department")
+rownames(information_explore) = c("Count of different names", "Count of different id")
+
+as.table(information_explore)
+```
+
+
+We can see that this dataset includes the order information about 39123 different food product and also the identity information of each product such as product name, product id, aisle, and department. There are 134 different aisles and 21 departments in total and each aisle and department has its unique id number.
