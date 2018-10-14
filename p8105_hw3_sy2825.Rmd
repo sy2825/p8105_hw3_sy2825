@@ -376,4 +376,8 @@ From the plot we can see that July is more likely to have higher temperature tha
 
 *Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
 
+```{r tmax_and_tmin}
+ny_noaa_clean %>%
+  filter(!is.na(tmin_c) & !is.na(tmax_c))
+```
 
