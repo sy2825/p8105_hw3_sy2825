@@ -376,8 +376,33 @@ From the plot we can see that July is more likely to have higher temperature tha
 
 *Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
 
+Since we are dealing with a lot of data, we will use "geom_hax()" to make the first plot.
 ```{r tmax_and_tmin}
 ny_noaa_clean %>%
-  filter(!is.na(tmin_c) & !is.na(tmax_c))
+  filter(!is.na(tmin_c) & !is.na(tmax_c)) %>%
+ ggplot(aes(x = tmin_c, y = tmax_c)) + 
+  geom_hex() +
+  labs(
+    title = "Tmax vs Tmin",
+    x = "tmin in degrees C",
+    y = "tmax in degrees C",
+    caption = "Data from ny_noaa data in p8105.datasets package"
+  )
+  
 ```
 
+```{r snowfall_distribution}
+ny_noaa_clean %>%
+  filter(snowfall_mm > 0 & snowfall_mm < 100) %>%
+  ggplot(aes(x = factor(year), y = snowfall_mm)) +
+  geom_boxplot() +
+   theme(axis.text.x = element_text(angle = 90)) +
+  labs(
+    title = "Distribution of snowfall values greater than 0 and less than 100",
+    x = "Year",
+    y = "Snowfall values in mm",
+    caption = "Data from ny_noaa data in p8105.datasets package"
+  )
+```
+
+As we can see that the snowfall values are stable from 1981 to 1996. However, starting at 2003 the snowfall values are becoimg volatile. Also the outliers are more likely to appear since 1997. These values may indicates the exist of climatic change in recent years.
